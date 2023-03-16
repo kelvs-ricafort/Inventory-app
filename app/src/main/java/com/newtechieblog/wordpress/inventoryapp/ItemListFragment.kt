@@ -35,4 +35,5 @@ class ItemListFragment : Fragment() {
             this.findNavController().navigate(action)
         }
     }
+
 }
