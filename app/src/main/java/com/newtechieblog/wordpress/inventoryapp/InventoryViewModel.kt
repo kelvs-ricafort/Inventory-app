@@ -1,13 +1,17 @@
 package com.newtechieblog.wordpress.inventoryapp
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.newtechieblog.wordpress.inventoryapp.data.Item
 import com.newtechieblog.wordpress.inventoryapp.data.ItemDao
 import kotlinx.coroutines.launch
 
+/**
+ * View Model to keep a reference to the Inventory repository and an up-to-date list of all items.
+ */
 class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
+    // Cache all items form the database using LiveData.
+    val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
+
     /**
      * Insert the new Item into database.
      */
@@ -23,6 +27,13 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         viewModelScope.launch {
             itemDao.insert(item)
         }
+    }
+
+    /**
+     * Retrieve an item from the repository.
+     */
+    fun retrieveItem(id: Int): LiveData<Item> {
+        return itemDao.getItem(id).asLiveData()
     }
 
     /**
