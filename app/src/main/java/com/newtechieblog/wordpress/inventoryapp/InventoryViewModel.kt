@@ -13,6 +13,15 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
 
     /**
+     * Launching a new coroutine to update an item in a non-blocking way
+     */
+    private fun updateItem(item: Item) {
+        viewModelScope.launch {
+            itemDao.update(item)
+        }
+    }
+
+    /**
      * Insert the new Item into database.
      */
     fun addNewItem(itemName: String, itemPrice: String, itemCount: String) {
